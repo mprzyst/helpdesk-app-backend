@@ -1,19 +1,26 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+
+export enum UserRole {
+  SUPER_ADMIN = 'super_admin',
+  ADMIN = 'admin',
+}
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
   @Column()
-  email: string;
-  @Column()
-  password: string;
-  @Column()
   name: string;
   @Column()
   surname: string;
   @Column()
-  tickets: number[];
+  email: string;
   @Column()
-  role: string;
+  password: string;
+  @Column({
+    type: "enum",
+    enum: UserRole,
+    default: UserRole.ADMIN,
+})
+role: UserRole
 }
