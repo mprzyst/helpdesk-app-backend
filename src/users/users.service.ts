@@ -8,18 +8,18 @@ export class UsersService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {
     this.repo = repo;
   }
-  create(email: string, password: string) {
-    const user = this.repo.create({ email, password });
+  create(email: string, password: string, name: string, surname: string) {
+    const user = this.repo.create({ email, password, name, surname });
     return this.repo.save(user);
   }
 
-  findOne(id: number) {
+  findOne(id: string) {
     return this.repo.findOneBy({ id });
   }
   find(email: string) {
     return this.repo.find({ where: { email } });
   }
-  async update(id: number, attrs: Partial<User>) {
+  async update(id: string, attrs: Partial<User>) {
     //find and update
     const user = await this.findOne(id);
     if (!user) throw new NotFoundException('User not found');
@@ -27,7 +27,7 @@ export class UsersService {
     Object.assign(user, attrs); //copy all attrs and copy directly to user
     return this.repo.save(user);
   }
-  async remove(id: number) {
+  async remove(id: string) {
     const user = await this.findOne(id); //user entity
     if (!user) throw new NotFoundException('User not found');
 

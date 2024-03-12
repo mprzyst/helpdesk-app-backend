@@ -19,6 +19,7 @@ import {
 } from '../interceptors/serialize.interceptor';
 import { UserDto } from './dtos/user.dto';
 import { AuthService } from './auth.service';
+import { SignInUserDto } from './dtos/signin-user.dto';
 
 @Controller('auth')
 export class UsersController {
@@ -29,11 +30,16 @@ export class UsersController {
 
   @Post('/signup')
   createUser(@Body() body: CreateUserDto) {
-    return this.userService.create(body.email, body.password);
+    return this.userService.create(
+      body.email,
+      body.password,
+      body.name,
+      body.surname,
+    );
   }
 
   @Post('/signin')
-  signIn(@Body() body: CreateUserDto) {
+  signIn(@Body() body: SignInUserDto) {
     return this.authService.signIn(body.email, body.password);
   }
 
@@ -41,7 +47,7 @@ export class UsersController {
   @Get('/:id')
   async findUser(@Param('id') id: string) {
     console.log('handler is running ');
-    const user = await this.userService.findOne(parseInt(id));
+    const user = await this.userService.findOne(id);
     if (!user) throw new NotFoundException('user not found');
 
     return user;
@@ -55,11 +61,11 @@ export class UsersController {
 
   @Patch('/:id')
   updateUser(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    return this.userService.update(parseInt(id), body);
+    return this.userService.update(id, body);
   }
 
   @Delete('/:id')
   removeUser(@Param('id') id: string) {
-    return this.userService.remove(parseInt(id));
+    return this.userService.remove(id);
   }
 }
